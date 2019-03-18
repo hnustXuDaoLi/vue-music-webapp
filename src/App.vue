@@ -1,12 +1,20 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <m-header></m-header>
     <router-view/>
   </div>
 </template>
+
+<script type="text/ecmascript-6">
+  import MHeader from 'components/m-header/m-header'
+
+  export default {
+    components: {
+      MHeader
+    }
+  }
+</script>
+
 
 <style lang="scss">
 #app {
