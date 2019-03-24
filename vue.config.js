@@ -2,6 +2,7 @@ var path = require('path')
 function resolve(dir) {
     return path.join(__dirname, '..', dir)
 }
+
 module.exports = {
     /** 区分打包环境与开发环境
      * process.env.NODE_ENV==='production'  (打包环境)
@@ -50,6 +51,8 @@ module.exports = {
             alias: {
                 components: path.join(__dirname, 'src/components'),
                 common: path.join(__dirname, 'src/common'),
+                api: path.join(__dirname, 'src/api'),
+                base: path.join(__dirname, 'src/base'),
             }
         }
     },
@@ -77,17 +80,27 @@ module.exports = {
     devServer: {
         open: process.platform === "darwin",
 
-        disableHostCheck: false,
-
-        host: "0.0.0.0",
-
         port: 8080,
 
         https: false,
 
-        hotOnly: false, // See https://github.com/vuejs/vue-cli/blob/dev/docs/cli-service.md#configuring-proxy
+        proxy: {
+            '/getDiscList': {
+                target: 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
+                changeOrigin: true,
+                ws: true,
+                pathRewrite: {
+                    '^/getDiscList': ''
+                },
+                onProxyReq (proxyReq, req, res) {
+                    proxyReq.setHeader('referer', 'https://c.y.qq.com/')
+                    proxyReq.setHeader('host', 'c.y.qq.com')
+                },
+                onProxyRes(proxyRes, req, res) {
 
-        proxy: null // string | Object
+                }
+            }
+        }
 
         // before: app => {}
     }, // 第三方插件配置
